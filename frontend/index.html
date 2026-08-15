@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>frontend</title>
+    <script>
+      // Intercept console.error to capture React render failures
+      var originalConsoleError = console.error;
+      console.error = function() {
+        originalConsoleError.apply(console, arguments);
+        
+        var msg = Array.prototype.slice.call(arguments).map(function(arg) {
+          if (arg instanceof Error) {
+            return arg.message + '\n' + arg.stack;
+          } else if (typeof arg === 'object') {
+            try {
+              return JSON.stringify(arg);
+            } catch (e) {
+              return String(arg);
+            }
+          }
+          return String(arg);
+        }).join(' ');
+
+        var errDiv = document.getElementById('react-error-display');
+        if (!errDiv) {
+          errDiv = document.createElement('div');
+          errDiv.id = 'react-error-display';
+          errDiv.style.position = 'fixed';
+          errDiv.style.top = '0';
+          errDiv.style.left = '0';
+          errDiv.style.width = '100%';
+          errDiv.style.height = '100%';
+          errDiv.style.backgroundColor = '#ffeeee';
+          errDiv.style.color = '#aa0000';
+          errDiv.style.padding = '20px';
+          errDiv.style.zIndex = '999999';
+          errDiv.style.fontFamily = 'monospace';
+          errDiv.style.whiteSpace = 'pre-wrap';
+          errDiv.style.overflow = 'auto';
+          errDiv.innerHTML = '<h1>🚨 React Console Error Captured</h1>';
+          document.body.appendChild(errDiv);
+        }
+        var pre = document.createElement('pre');
+        pre.textContent = msg;
+        errDiv.appendChild(pre);
+      };
+
+      window.addEventListener('error', function(event) {
+        var errDiv = document.createElement('div');
+        errDiv.style.position = 'fixed';
+        errDiv.style.top = '0';
+        errDiv.style.left = '0';
+        errDiv.style.width = '100%';
+        errDiv.style.height = '100%';
+        errDiv.style.backgroundColor = '#ffeeee';
+        errDiv.style.color = '#aa0000';
+        errDiv.style.padding = '20px';
+        errDiv.style.zIndex = '999999';
+        errDiv.style.fontFamily = 'monospace';
+        errDiv.style.whiteSpace = 'pre-wrap';
+        errDiv.style.overflow = 'auto';
+        errDiv.innerHTML = '<h1>🚨 Uncaught Runtime Exception</h1>' +
+          '<h3>' + event.message + '</h3>' +
+          '<p>Source: ' + event.filename + ':' + event.lineno + ':' + event.colno + '</p>' +
+          '<pre>' + (event.error ? event.error.stack : 'No stack trace available') + '</pre>';
+        document.body.appendChild(errDiv);
+      });
+      window.addEventListener('unhandledrejection', function(event) {
+        var errDiv = document.createElement('div');
+        errDiv.style.position = 'fixed';
+        errDiv.style.top = '0';
+        errDiv.style.left = '0';
+        errDiv.style.width = '100%';
+        errDiv.style.height = '100%';
+        errDiv.style.backgroundColor = '#ffeeee';
+        errDiv.style.color = '#aa0000';
+        errDiv.style.padding = '20px';
+        errDiv.style.zIndex = '999999';
+        errDiv.style.fontFamily = 'monospace';
+        errDiv.style.whiteSpace = 'pre-wrap';
+        errDiv.style.overflow = 'auto';
+        errDiv.innerHTML = '<h1>🚨 Unhandled Promise Rejection</h1>' +
+          '<h3>' + event.reason + '</h3>' +
+          '<pre>' + (event.reason && event.reason.stack ? event.reason.stack : 'No stack trace available') + '</pre>';
+        document.body.appendChild(errDiv);
+      });
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
