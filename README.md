@@ -14,7 +14,7 @@ An advanced, production-ready, cloud-capable web application designed specifical
 * **Prakriti (Dosha) Advisory Engine**: Custom warnings and suggestions based on whether the patient is classified as Vata, Pitta, Kapha, or mixed doshas.
 * **Printable Diet Reports**: Clean, formatted CSS print styles designed to generate clean PDFs for download/printing with disclaimers.
 * **Zero-Config Database Connector**: Primary PostgreSQL connection, with an automatic fallback to local JSON database (`backend/database/db.json`) if no cloud URL is set.
-
+* 
 ---
 
 ## 🛠️ Technology Stack
